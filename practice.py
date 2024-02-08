@@ -1,50 +1,36 @@
 import sys
 input = sys.stdin.readline
-from collections import deque
-import math
+from queue import PriorityQueue
 
-row = [3,0,0,0,1,1,1,2,2,2]  # 0 1,2,3,4,5,6,7,8,9
-col = [1,0,1,2,0,1,2,0,1,2]  # 0 1,2,3,4,5,6,7,8,9
+V, E = map(int, input().split())
+K = int(input())
+myList = [[] for _ in range(V+1)]
+distance = [sys.maxsize]*(V+1)
+visited = [False]*(V+1)
+q = PriorityQueue()
 
-def solution(numbers, hand):
-    answer = ''
-    Left = [1,4,7]
-    Right = [3,6,9]
-    L_pos = [3,0]   # * 자리 번호
-    R_pos = [3,2]   # # 자리 번호
+for _ in range(E):
+    u, v, w = map(int, input().split())
+    myList[u].append((v,w))
 
+q.put((0,K))
+distance[K] = 0
 
-    for i in numbers:
-        target_row_pos = row[i]
-        target_col_pos = col[i]
-        if i in Left:
-            answer += 'L'
-            L_pos = [target_row_pos,target_col_pos]
-        elif i in Right:
-            answer += 'R'
-            R_pos = [target_row_pos,target_col_pos]
-        else:
-            L_gap = abs(target_row_pos - L_pos[0]) + abs(target_col_pos - L_pos[1])
-            R_gap = abs(target_row_pos - R_pos[0]) + abs(target_col_pos - R_pos[1])
-            if L_gap == R_gap:
-                if hand == "right": 
-                    answer += 'R'
-                    R_pos = [target_row_pos,target_col_pos]
-                else: 
-                    answer += 'L'
-                    L_pos = [target_row_pos,target_col_pos]
-            elif L_gap > R_gap:
-                answer += 'R'
-                R_pos = [target_row_pos,target_col_pos]
-            else:
-                answer += 'L'
-                L_pos = [target_row_pos,target_col_pos]
+while q.qsize() > 0:
+    now = (q.get())[1]
+    if visited[now]: continue
+    visited[now] = True
 
-    return answer
+    for tmp in myList[now]:
+        next = tmp[0]
+        value = tmp[1]
+        if distance[next] > distance[now] + value:
+            distance[next] = distance[now] + value
+            q.put((distance[next], next))
+        
 
-
-if __name__ == "__main__":
-    numbers = [0,0]
-    hand = "right"
-    k = solution(numbers, hand)
-    print(k)
+for i in range(1,V+1):
+    if visited[i]:
+        print(distance[i])
+    else:
+        print("INF")

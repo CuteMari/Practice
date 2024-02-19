@@ -1,34 +1,35 @@
 import sys
 input = sys.stdin.readline
+from collections import deque
 
-N = int(input())
-stack = [0] + list(map(int, input().split()))
-stack_rest = []
-D = [-1 for i in range(N+1)]  # 인덱스 값으로 저장
+S = input().rstrip()
+stack = []
+queue = deque()
+
+for i in range(len(S)):
+    queue.append(S[i])
 
 
-idx = len(stack) - 1
-while idx > 1:
-    tmp = idx - 1
-    if stack[idx] <= stack[idx - 1]:
-        D[idx] = idx - 1
-        while len(stack_rest) > 0:
-            now_rest_idx = stack_rest.pop()
-            if stack[now_rest_idx] <= stack[idx - 1]:
-                D[now_rest_idx] = idx - 1
-            else:
-                stack_rest.append(now_rest_idx)
-                break
+isTag = False
+while queue:
+    now = queue.popleft()
+    if now == '<':
+        while len(stack) > 0:
+            print(stack.pop(), end='')
+        isTag = True
+        print(now, end='')
+    elif now == '>':
+        isTag = False
+        print(now, end='')
+    elif now == ' ':
+        while len(stack) > 0:
+            print(stack.pop(), end='')
+        print(now, end='')
     else:
-        stack_rest.append(idx)
-    
-    idx -= 1
-    
-    
+        if isTag:
+            print(now, end='')
+        else:
+            stack.append(now)
 
-while len(stack_rest) > 0:
-    D[stack_rest.pop()] = 0
-
-D[1] = 0
-for i in range(1,N+1):
-    print(D[i], end=' ')
+while len(stack) > 0:
+    print(stack.pop(), end='')

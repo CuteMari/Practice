@@ -1,40 +1,30 @@
 import sys
 input = sys.stdin.readline
-from collections import deque
-
-ALP = [0 for _ in range(26)]
-name = input().rstrip()
-
-for i in range(len(name)):
-    ALP[ord(name[i]) - 65] += 1
 
 
+def solution(string):
+    idx = 0
+    cnt = 0
 
-left_queue = deque()
-right_queue = deque()
-for i in range(26):
-    cnt = ALP[i]//2
-    for j in range(cnt):
-        left_queue.append(chr(i+65))
-        right_queue.append(chr(i+65))
+    stack = []
+    isLaser = True
+    for i in range(len(string)):
+        c = string[i]
+        if c == '(':
+            stack.append(c)
+            isLaser = True  # 레이저가 될 가능성이 있음
+        else:
+            if isLaser:
+                stack.pop()
+                isLaser = False
+                cnt += len(stack)
+            else:
+                stack.pop()
+                cnt += 1
     
+    return cnt
 
-isOddExist = False
-isPalin = True
-for i in range(26):
-    rest = ALP[i]%2
-    if rest == 1:
-        if isOddExist:  # 홀수개인 알파벳이 존재하면 팰린드롬 불가능
-            isPalin = False
-            break
-        isOddExist = True
-        left_queue.append(chr(i+65))
-
-
-if isPalin:
-    while left_queue:
-        print(left_queue.popleft(), end='')
-    while right_queue:
-        print(right_queue.pop(), end='')
-else:
-    print("I'm Sorry Hansoo")
+if __name__ == "__main__":
+    stick = input().rstrip()
+    res = solution(stick)
+    print(res)

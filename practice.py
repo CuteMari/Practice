@@ -1,30 +1,45 @@
 import sys
 input = sys.stdin.readline
 
+def solution(s):
+    answer = 0
 
-def solution(string):
-    idx = 0
-    cnt = 0
-
-    stack = []
-    isLaser = True
-    for i in range(len(string)):
-        c = string[i]
-        if c == '(':
-            stack.append(c)
-            isLaser = True  # 레이저가 될 가능성이 있음
-        else:
-            if isLaser:
-                stack.pop()
-                isLaser = False
-                cnt += len(stack)
+    min = len(s)
+    for l in range(1, len(s)+1):
+        length = len(s)
+        start = 0
+        end = l-1    
+        while start <= len(s) - 1:
+            if end > len(s) - 1:
+                tmp = s[start:len(s)-1]
+                break
             else:
-                stack.pop()
-                cnt += 1
-    
-    return cnt
+                tmp = s[start:end+1]
+                cnt = 0
+                while s[start:end+1] == tmp:
+                    cnt += 1
+                    start += l
+                    end += l
+                if cnt > 1:
+                    length -= (cnt-1)*(len(tmp))
+                    length += len(str(cnt))
+
+
+        
+        if length < min:
+            min = length
+            
+    answer = min
+
+    return answer
+
+
+
 
 if __name__ == "__main__":
-    stick = input().rstrip()
-    res = solution(stick)
-    print(res)
+    s = input().rstrip()
+    answer = solution(s)
+    print(answer)
+
+
+

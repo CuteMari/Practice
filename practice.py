@@ -9,7 +9,7 @@ def dfs(v, depth):
             print(ans[i], end=' ')
         print()
         return
-    for i in range(1, N+1):
+    for i in range(v, N+1):
         visited[i] = True
         dfs(i, depth+1)
         visited[i] = False

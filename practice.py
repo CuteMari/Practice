@@ -1,26 +1,25 @@
 import sys
 input = sys.stdin.readline
 
-def solution(depth, start, cost, graph, visited):
-    global M
-    if depth == len(visited)-1 and graph[start][0] != 0:
-        M = min(M, cost+graph[start][0])
+def dfs(v, depth):
+    visited[v] = True
+    ans.append(v)
+    if depth == M:
+        for i in range(len(ans)):
+            print(ans[i], end=' ')
+        print()
         return
-    for i in range(N):
-        if not visited[i] and graph[start][i] != 0:
+    for i in range(v+1, N+1):
+        if not visited[i]:
             visited[i] = True
-            solution(depth+1, i, cost+graph[start][i], graph, visited)
+            dfs(i, depth+1)
             visited[i] = False
+            ans.pop()
 
 
 
-if __name__ == "__main__":
-    N = int(input())
-    graph = [list(map(int, input().split())) for _ in range(N)]
-    visited = [False]*(N)
-    visited[0] = True
-    M = sys.maxsize
-
-    solution(0,0,0,graph,visited)
-
-    print(M)
+N, M = map(int, input().split())
+for i in range(1,N+1):
+    visited = [False for _ in range(N+1)]
+    ans = []
+    dfs(i, 1)

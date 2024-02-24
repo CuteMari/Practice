@@ -1,54 +1,33 @@
 import sys
 input = sys.stdin.readline
 
-def calculate(A_idx, op_idx, sum):
-    if op_idx == 0:
-        sum += A[A_idx]
-    elif op_idx == 1:
-        sum -= A[A_idx]
-    elif op_idx == 2:
-        sum *= A[A_idx]
-    else:
-        sum /= A[A_idx]
-
-    return int(sum)
-
-
-def dfs(A_idx, op_idx, sum):
-    global Min, Max
-    sum = calculate(A_idx, op_idx, sum)
-
-    if A_idx == N-1:
-        if sum < Min:
-            Min = sum
-        if sum > Max:
-            Max = sum
+def DFS(idx, depth):
+    ans.append(A[idx])
+    if depth == M-1:
+        for i in ans:
+            print(i, end=' ')
+        print()
         return
-    for i in range(4):
-        if visited[i] > 0:
-            visited[i] -= 1
-            dfs(A_idx+1, i, sum)
-            visited[i] += 1
+
+    for i in range(N):
+        if not visited[i]:
+            visited[i] = True
+            DFS(i, depth+1)
+            visited[i] = False
+            ans.pop()
 
 
 
 
 
-N = int(input())
+
+N,M = map(int, input().split())
 A = list(map(int, input().split()))
-OP = list(map(int, input().split()))  # +, -, x, /
-Min = sys.maxsize
-Max = -sys.maxsize
+A.sort()
 
 
-for i in range(4):
-    visited = [k for k in OP]
-    if visited[i] > 0:
-        visited[i] -= 1
-        dfs(1, i, A[0])
-
-
-print(Max)
-print(Min)
-
-
+for i in range(len(A)):
+    visited = [False for _ in range(N)]
+    visited[i] = True
+    ans = []
+    DFS(i, 0)

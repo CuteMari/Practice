@@ -9,7 +9,7 @@ def DFS(idx, depth):
         print()
         return
 
-    for i in range(N):
+    for i in range(idx+1,N):
         if not visited[i]:
             visited[i] = True
             DFS(i, depth+1)

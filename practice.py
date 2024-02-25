@@ -1,43 +1,47 @@
 import sys
 input = sys.stdin.readline
-import re
 from collections import deque
 
+def BFS(i,j):
+    queue = deque()
+    queue.append((i,j))
+    visited[i][j] = True
+    cnt = 1
+    while queue:
+        now = queue.popleft()
+        for k in range(4):
+            x = now[0] + dx[k]
+            y = now[1] + dy[k]
+            if x >= 0 and x < N and y >= 0 and y < N:
+                if not visited[x][y] and APT[x][y] == '1':
+                    queue.append((x,y))
+                    visited[x][y] = True
+                    cnt += 1
+                
+    return cnt
+
+
+
+
 N = int(input())
-room = [[] for _ in range(N)]
+APT = []
 for i in range(N):
-    room[i] = list(input().rstrip())
-    
+    APT.append(list(input().rstrip()))
 
-row_cnt = 0
-for i in range(N):
-    row = room[i]
-    cnt = 0
-    for j in range(N):
-        if row[j] == 'X':
-            cnt = 0
-        elif row[j] == '.' and cnt >= 2:
-            continue
-        elif row[j] == '.' and cnt == 1:
-            row_cnt += 1
-            cnt += 1
-        elif row[j] == '.':
-            cnt += 1
+dx = [1,-1,0,0]
+dy = [0,0,1,-1]
+visited = [[False for j in range(N)] for i in range(N)]
 
-col_cnt = 0
+apt_cnt = 0
+danzi_cnt = []
 for i in range(N):
-    cnt = 0
     for j in range(N):
-        if room[j][i] == 'X':
-            cnt = 0
-        elif room[j][i] == '.' and cnt >= 2:
-            continue
-        elif room[j][i] == '.' and cnt == 1:
-            col_cnt += 1
-            cnt += 1
-        elif room[j][i] == '.':
-            cnt += 1
-        
-    
-            
-print(row_cnt, col_cnt)
+        if not visited[i][j] and APT[i][j] == '1':
+            apt_cnt += 1
+            res = BFS(i,j)
+            danzi_cnt.append(res)
+
+print(apt_cnt)
+danzi_cnt.sort()
+for i in range(len(danzi_cnt)):
+    print(danzi_cnt[i])

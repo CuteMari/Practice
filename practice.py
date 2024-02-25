@@ -1,33 +1,25 @@
 import sys
 input = sys.stdin.readline
+from collections import deque
 
-def DFS(idx, depth):
-    ans.append(A[idx])
-    if depth == M-1:
-        for i in ans:
-            print(i, end=' ')
+def DFS(depth):
+    if depth == M:
+        for i in range(M):
+            print(ans[i], end=' ')
         print()
         return
-
-    for i in range(idx+1,N):
-        if not visited[i]:
-            visited[i] = True
-            DFS(i, depth+1)
-            visited[i] = False
-            ans.pop()
+    for i in range(N):
+        ans.append(A[i])
+        DFS(depth+1)
+        ans.pop()
+    
 
 
-
-
-
-
-N,M = map(int, input().split())
+N, M = map(int, input().split())
 A = list(map(int, input().split()))
 A.sort()
 
-
-for i in range(len(A)):
-    visited = [False for _ in range(N)]
-    visited[i] = True
+for i in range(N):
     ans = []
-    DFS(i, 0)
+    ans.append(A[i])
+    DFS(1)

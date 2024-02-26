@@ -1,33 +1,16 @@
 import sys
 input = sys.stdin.readline
 
+arr = [[0 for _ in range(101)] for _ in range(101)]
+for _ in range(4):
+    x1, y1, x2, y2 = map(int, input().split())
 
-def DFS(v, i):
-    visited[v] = True   
-    next = A[v]
-    if not visited[next]:
-        DFS(next, i)
-    elif visited[next] and next == i:
-        result.append(next)
+    for i in range(x1, x2):
+        for j in range(y1, y2):
+            arr[i][j] = 1
 
-    
+answer = 0
+for row in arr:
+    answer += sum(row)
 
-
-N = int(input())
-A = [0 for _ in range(N+1)]
-
-for i in range(1,N+1):
-    A[i] = int(input())
-
-
-cnt = 0
-result = []
-for i in range(1,N+1):
-    visited = [False]*(N+1)
-    DFS(i,i)
-
-
-print(len(result))
-result.sort()
-for i in result:
-    print(i)
+print(answer)

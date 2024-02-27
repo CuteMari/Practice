@@ -1,43 +1,42 @@
 import sys
 input = sys.stdin.readline
+from collections import deque
 
-def RowCount(arr):
-    cnt = 0
+def Importance(D_cnt, k):
+    for i in range(9, k, -1):
+        if D_cnt[i] > 0:    # 높은 중요도가 존재하면 False
+            return False
 
-    for i in range(N):
-        isContinuous = False
-        for j in range(M):
-            if arr[i][j] != '-':
-                isContinuous = False
-            else:
-                if not isContinuous:
-                    cnt += 1
-                    isContinuous = True
-
-    return cnt
+    return True  # 높은 중요도가 없으면 True
 
 
-def ColCount(arr):
-    cnt = 0
 
-    for i in range(M):
-        isContinuous = False
-        for j in range(N):
-            if arr[j][i] != '|':
-                isContinuous = False
-            else:
-                if not isContinuous:
-                    cnt += 1
-                    isContinuous = True
-    
-    return cnt
+T = int(input())
+for _ in range(T):
+    N, M = map(int, input().split())
+    D = [0] + list(map(int, input().split()))  
+    D_cnt = [0] * 10     # 중요도 cnt
 
-N, M = map(int, input().split())
-arr = []
-for _ in range(N):
-    arr.append(list(input().rstrip()))
+    for i in range(1,N+1):
+        D_cnt[D[i]] += 1
+
+    queue  = deque()
+    for i in range(1,N+1):   # 초기 큐 1(A) ~ Z(26) 저장
+        queue.append(i)
+
+    res = 0
+    target = M+1
+    while queue:  # 중요도 1 ~ 9
+        now = queue.popleft()
+        isPop = Importance(D_cnt, D[now])
+        if isPop:
+            res += 1
+            D_cnt[D[now]] -= 1
+            if now == target:
+                print(res)
+                break
+        else:
+            queue.append(now)
 
 
-row = RowCount(arr)
-col = ColCount(arr)
-print(row + col)
+

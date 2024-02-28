@@ -1,20 +1,33 @@
 import sys
 input = sys.stdin.readline
 
-def solution(P):
-    arr = [0 for _ in range(len(P))]
+def solution(s):
+    alp = [0 for _ in range(26)]
 
-    for i in range(1,len(P)):
-        arr[i] = arr[i-1] + P[i]
+    isGroup = True
+    checkchar = ''
+    for i in s:
+        if i == checkchar:
+            continue
+        else:
+            if alp[ord(i)-97] == 1:
+                isGroup = False
+                break
+            else:
+                alp[ord(i)-97] = 1
+                checkchar = i
 
 
-    ans = sum(arr)
-    return ans
+    return isGroup
 
 
 if __name__ == '__main__':
     N = int(input())
-    P = [0] + list(map(int, input().split()))   # 1번부터 시작!
-    P.sort()
-    res = solution(P)
-    print(res)
+    cnt = 0
+    for _ in range(N):
+        s = input().rstrip()
+        res = solution(s)
+        if res:
+            cnt += 1
+
+    print(cnt)

@@ -2,35 +2,22 @@ import sys
 input = sys.stdin.readline
 from collections import deque
 
-def solution(idx, depth):
-    ans.append(A[idx])
 
-    if depth == M:
-        result = " ".join(ans)
-        if result not in dic:
-            dic[result] = 1
-        return
-
-    for i in range(N):
-        if not visited[i]:
-            visited[i] = True
-            solution(i, depth+1)
-            ans.pop()
-            visited[i] = False
+N, M = map(int, input().split())
+arr = []
+arr.append([0 for _ in range(N+1)])
+for _ in range(N):
+    arr.append([0] + list(map(int, input().split())))
 
 
+D = [[0 for _ in range(N+1)] for _ in range(N+1)]
+for i in range(1,N+1):
+    for j in range(1,N+1):
+        D[i][j] = D[i][j-1] + D[i-1][j] - D[i-1][j-1] + arr[i][j]
 
-if __name__ == '__main__':
-    N, M = map(int, input().split())
-    A = list(map(int, input().split()))
-    A.sort()
-    A = list(map(str, A))
-    dic = {}
-    for i in range(N):
-        visited = [False for _ in range(N)]
-        visited[i] = True
-        ans = []
-        solution(i, 1)
 
-    for i in dic:
-        print(i)
+for _ in range(M):
+    x1, y1, x2, y2 = map(int, input().split())
+    res = D[x2][y2] - D[x2][y1-1] - D[x1-1][y2] + D[x1-1][y1-1]
+    print(res) 
+    

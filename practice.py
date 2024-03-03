@@ -1,23 +1,43 @@
 import sys
 input = sys.stdin.readline
-from collections import deque
 
 
-N, M = map(int, input().split())
-arr = []
-arr.append([0 for _ in range(N+1)])
-for _ in range(N):
-    arr.append([0] + list(map(int, input().split())))
-
-
-D = [[0 for _ in range(N+1)] for _ in range(N+1)]
-for i in range(1,N+1):
-    for j in range(1,N+1):
-        D[i][j] = D[i][j-1] + D[i-1][j] - D[i-1][j-1] + arr[i][j]
-
-
-for _ in range(M):
-    x1, y1, x2, y2 = map(int, input().split())
-    res = D[x2][y2] - D[x2][y1-1] - D[x1-1][y2] + D[x1-1][y1-1]
-    print(res) 
+def backtrack(r,n,is_queen_in_col, is_queen_in_left, is_queen_in_right):
+    if r == n:
+        return 1
     
+
+    ret = 0
+
+    for c in range(n):
+        if not is_queen_in_col[c] and not is_queen_in_right[r+c] and not is_queen_in_left[n-1+r-c]:
+            is_queen_in_col[c] = True
+            is_queen_in_right[r+c] = True
+            is_queen_in_left[n-1+r-c] = True
+
+
+            ret += backtrack(r+1, n, is_queen_in_col, is_queen_in_left, is_queen_in_right)
+
+
+            is_queen_in_col[c] = False
+            is_queen_in_right[r+c] = False
+            is_queen_in_left[n-1+r-c] = False
+
+
+    return ret
+
+
+def solution(n):
+    SIZE = 15
+    is_queen_in_col = [False]*((SIZE-1)*2)
+    is_queen_in_left = [False]*((SIZE-1)*2)
+    is_queen_in_right = [False]*((SIZE-1)*2)
+    
+    answer = backtrack(0,n,is_queen_in_col, is_queen_in_left, is_queen_in_right)
+
+    return answer
+
+if __name__ == "__main__":
+    N = int(input())
+    ans = solution(N)
+    print(ans)

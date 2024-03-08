@@ -1,24 +1,25 @@
 import sys
 input = sys.stdin.readline
-from collections import deque
 
+T = int(input())
+for _ in range(T):
+    log = input().rstrip()
+    front = []
+    back = []
+    cursor = 0
 
-N = int(input())
+    for c in log:
+        if c == '-':
+            if front:
+                front.pop()
+        elif c == '<':
+            if front:
+                back.append(front.pop())
+        elif c == '>':
+            if back:
+                front.append(back.pop())
+        else:
+            front.append(c)
 
-if N%5 == 0:
-    print(N//5)
-else:
-    p = 0
-    while N > 0:
-        N -= 3
-        p += 1
-        if N%5 == 0:
-            p += (N//5)
-            print(p)
-            break
-        elif N == 1 or N == 2:
-            print(-1)
-            break
-        elif N == 0:
-            print(p)
-            break
+       
+    print("".join(front) + "".join(back[::-1]))

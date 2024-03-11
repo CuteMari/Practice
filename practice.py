@@ -1,43 +1,48 @@
 import sys
 input = sys.stdin.readline
+from collections import deque
+
+def BFS(r,c,color, visited):
+    answer = 0
+    queue = deque()
+    queue.append((r,c))
+
+    dr = [0,1,0,-1]
+    dc = [1,0,-1,0]
+    while queue:
+        now = queue.pop()
+        for i in range(4):
+            next_r = now[0] + dr[i]
+            next_c = now[1] + dc[i]
+            if next_r >= 0 and next_r < m and next_c >= 0 and next_c < n:
+                if not visited[next_r][next_c] and picture[next_r][next_c] == color:
+                    visited[next_r][next_c] = True
+                    queue.append((next_r, next_c))
+                    answer += 1
+
+    return answer
+
+def solution(m,n,picture):
+
+    cnt = 0
+    maxValue = 0
+    visited = [[False for _ in range(n)] for _ in range(m)]
+    for i in range(m):
+        for j in range(n):
+            if picture[i][j] != 0 and visited[i][j] == False:
+                cnt += 1
+                color = picture[i][j]
+                tmp = BFS(i,j,color, visited)
+                maxValue = max(maxValue, tmp)
 
 
-def floydWarshall(A):
-    for k in range(1,N+1):
-        for i in range(1, N+1):
-            for j in range(1, N+1):
-                A[i][j] = min(A[i][j], A[i][k] + A[k][j])
+
+    return cnt, maxValue
 
 
-def calcDistance(roomNum, A, P):
-    distance = 0
-    for i in P:
-        distance += A[i][roomNum]
-
-    return distance
-
-
-T = int(input())
-for _ in range(T):
-    N, M = map(int, input().split())
-    arr = [[sys.maxsize for _ in range(N+1)] for _ in range(N+1)]
-    for i in range(1, N+1):
-        arr[i][i] = 0
-    for _ in range(M):
-        a, b, c = map(int, input().split())
-        arr[a][b] = c
-        arr[b][a] = c
-
-    floydWarshall(arr)
-
-
-    K = int(input())
-    roomP = list(map(int, input().split()))
-    minValue = sys.maxsize 
-    minNum = 0
-    for i in range(1,N+1):
-        if minValue > calcDistance(i, arr, roomP):
-            minValue = calcDistance(i, arr, roomP)
-            minNum = i
-
-    print(minNum)
+if __name__ == "__main__":
+    m = 6
+    n = 4
+    picture = [[1, 0, 0, 1 ],[ 1, 0, 0, 1 ],[1, 0, 0, 1 ],[1, 0, 0, 1 ],[1, 0, 0, 1 ],[1,1,1,1]]
+    res = solution(m,n,picture)
+    print(res[0], res[1])

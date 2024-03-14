@@ -2,47 +2,91 @@ import sys
 input = sys.stdin.readline
 from collections import deque
 
-def BFS(r,c,color, visited):
+def solution(board, turninfo):
     answer = 0
-    queue = deque()
-    queue.append((r,c))
 
-    dr = [0,1,0,-1]
-    dc = [1,0,-1,0]
-    while queue:
-        now = queue.pop()
-        for i in range(4):
-            next_r = now[0] + dr[i]
-            next_c = now[1] + dc[i]
-            if next_r >= 0 and next_r < m and next_c >= 0 and next_c < n:
-                if not visited[next_r][next_c] and picture[next_r][next_c] == color:
-                    visited[next_r][next_c] = True
-                    queue.append((next_r, next_c))
-                    answer += 1
+    queue = deque()
+    nowR = 1
+    nowC = 1
+    dir_idx = 0
+    isEnd = False
+    queue.append((1,1))
+    for snake in turninfo:
+        time = snake[0]
+        while answer < time:
+            if dir_idx == 0:
+                nowC += 1
+            elif dir_idx == 1:
+                nowR -= 1
+            elif dir_idx == 2:
+                nowC -= 1
+            else:
+                nowR += 1
+            answer += 1
+            
+            if nowR < 1 or nowR > N or nowC < 1 or nowC > N or board[nowR][nowC] == 1:
+                isEnd = True
+                break
+            
+            if board[nowR][nowC] != 2:
+                rear = queue.pop()
+                board[rear[0]][rear[1]] = 0
+            queue.appendleft((nowR, nowC))
+            board[nowR][nowC] = 1
+
+
+
+        dir = snake[1]
+        if dir == 'L':
+            dir_idx += 1
+        else:
+            dir_idx -= 1
+        dir_idx = (dir_idx + 4) % 4
+        if isEnd: break
+
+    if isEnd: return answer
+    else:
+        while True:
+            if dir_idx == 0:
+                nowC += 1
+            elif dir_idx == 1:
+                nowR -= 1
+            elif dir_idx == 2:
+                nowC -= 1
+            else:
+                nowR += 1
+            answer += 1
+
+            if nowR < 1 or nowR > N or nowC < 1 or nowC > N or board[nowR][nowC] == 1:
+                    isEnd = True
+                    break
+                    
+            if board[nowR][nowC] != 2:
+                rear = queue.pop()
+                board[rear[0]][rear[1]] = 0
+            queue.appendleft((nowR, nowC))
+            board[nowR][nowC] = 1
+
 
     return answer
 
-def solution(m,n,picture):
-
-    cnt = 0
-    maxValue = 0
-    visited = [[False for _ in range(n)] for _ in range(m)]
-    for i in range(m):
-        for j in range(n):
-            if picture[i][j] != 0 and visited[i][j] == False:
-                cnt += 1
-                color = picture[i][j]
-                tmp = BFS(i,j,color, visited)
-                maxValue = max(maxValue, tmp)
-
-
-
-    return cnt, maxValue
-
 
 if __name__ == "__main__":
-    m = 6
-    n = 4
-    picture = [[1, 0, 0, 1 ],[ 1, 0, 0, 1 ],[1, 0, 0, 1 ],[1, 0, 0, 1 ],[1, 0, 0, 1 ],[1,1,1,1]]
-    res = solution(m,n,picture)
-    print(res[0], res[1])
+    N = int(input())
+    K = int(input())
+    board = [[0 for _ in range(N+1)] for _ in range(N+1)]
+    for _ in range(K):
+        a, b = map(int, input().split())
+        board[a][b] = 2
+    
+    L = int(input())
+    turninfo = []
+    for _ in range(L):
+          info = input().rstrip().split()
+          X = int(info[0])
+          C = info[1]
+          turninfo.append((X,C))
+
+
+    res = solution(board, turninfo)
+    print(res)

@@ -1,17 +1,22 @@
 import sys
 input = sys.stdin.readline
-from queue import PriorityQueue
 
-N = int(input())
-pq = PriorityQueue()
-ans = 0
-weight = []
+
+
+cnt = 0
+N, P = map(int, input().split())
+finger = [[] for _ in range(N+1)]
 for _ in range(N):
-    l = int(input())
-    pq.put(l)
+    a, b = map(int, input().split())
+    while len(finger[a]) > 0 and finger[a][-1] > b:
+        finger[a].pop()
+        cnt += 1
+    if len(finger[a]) > 0 and finger[a][-1] == b:
+        continue
+    finger[a].append(b)
+    cnt += 1
 
-while pq.qsize() > 0:
-    w = pq.get()
-    ans = max(ans, w, w*(pq.qsize()+1))
+    
+print(cnt)
+        
 
-print(ans)

@@ -1,24 +1,17 @@
 import sys
 input = sys.stdin.readline
-from collections import deque
+from queue import PriorityQueue
 
 N = int(input())
-buffer = deque()
+pq = PriorityQueue()
+ans = 0
+weight = []
+for _ in range(N):
+    l = int(input())
+    pq.put(l)
 
-while True:
-    x = int(input())
-    if x == 0:
-        buffer.popleft()
-    elif x == -1:
-        break
-    else:
-        if len(buffer) == N:
-            continue
-        buffer.append(x)
-    
-    
-if not buffer:
-    print("empty")
-else:
-    while buffer:
-        print(buffer.popleft(), end=' ')
+while pq.qsize() > 0:
+    w = pq.get()
+    ans = max(ans, w, w*(pq.qsize()+1))
+
+print(ans)

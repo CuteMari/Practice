@@ -1,49 +1,24 @@
 import sys
 input = sys.stdin.readline
-import math
+from collections import deque
 
-Prime = [True]*(10000000)
-for i in range(2, int(math.sqrt(10000000))+1):
-    if Prime[i]:
-        for j in range(i*2, 10000000, i):
-            Prime[j] = False
+N = int(input())
+buffer = deque()
 
-
-primeList = []
-for i in range(2,10000000):
-    if Prime[i]:
-        primeList.append(i)
-
-
-T = int(input())
-for t in range(T):
-    M = int(input())
-    A = list(map(int, input().split()))
-    checkdic = {}
-    for l in A:
-        tmp = 0
-        for i in range(l):
-            tmp += primeList[i]
-        checkdic[tmp] = 1
-        for i in range(l, len(primeList)):
-            j = i - l
-            tmp -= primeList[j]
-            tmp += primeList[i]
-            if tmp >= 10000000: break
-            
-            if tmp in checkdic:
-                checkdic[tmp] += 1
-            else:
-                checkdic[tmp] = 1
-        
+while True:
+    x = int(input())
+    if x == 0:
+        buffer.popleft()
+    elif x == -1:
+        break
+    else:
+        if len(buffer) == N:
+            continue
+        buffer.append(x)
     
-    print("Scenario " + str(t+1) + ":")
     
-    for i in checkdic.keys():
-        if Prime[i] and checkdic[i] == M:
-            print(i)
-            break
-    
-    print()
-
-
+if not buffer:
+    print("empty")
+else:
+    while buffer:
+        print(buffer.popleft(), end=' ')
